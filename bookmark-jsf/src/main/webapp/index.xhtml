@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                template="/templates/default.xhtml">
+    <ui:define name="content">
+        <p:growl id="growl" showDetail="true" />
+        <div class="row">
+            <div class="col-md-12">
+                <h:form>
+                    <h:commandLink value="Logout" action="#{authCtrl.logout}" />
+                </h:form>
+                <h:panelGroup rendered="#{authCtrl.admin}">
+                    <h:link value="Admin" outcome="admin/index" />
+                </h:panelGroup>
+                <div class="page-header">
+                    <h1>Bookmark <small>Shared Link List</small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div>
+                    <h:form id="edit-form">
+                        <p:panel id="panel" header="Add a new link" styleClass="form-panel">
+                            <div class="form-group">
+                                <p:outputLabel for="title" value="Title:" />
+                                <p:inputText id="title" value="#{linkCtrl.link.title}"
+                                             styleClass="form-control" maxlength="1024" />
+                            </div>
+
+                            <div class="form-group">
+                                <p:outputLabel for="url" value="URL:" />
+                                <p:inputText id="url" value="#{linkCtrl.link.url}"
+                                             styleClass="form-control" maxlength="1024"/>
+                            </div>
+
+                            <p:commandButton id="saveButton" value="Speichern"
+                                             action="#{linkCtrl.save}" validateClient="true" ajax="true"
+                                             icon="ui-icon-check" update=":growl, :linkTable" styleClass="btn btn-default" />
+                        </p:panel>
+                    </h:form>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div>
+                    <p:dataTable id="linkTable" autoUpdate="true" var="link" value="#{linkCtrl.links}"
+                                 widgetVar="linkeTable" emptyMessage="No links found. Add some."
+                                 paginator="true" paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 paginatorAlwaysVisible="false" rowsPerPageTemplate="20,50,100"
+                                 rows="20"
+                                 currentPageReportTemplate="{currentPage} of {totalPages}">
+
+                        <p:column headerText="Title">
+                            <h:outputText value="#{link.title}" />
+                        </p:column>
+
+                        <p:column headerText="URL">
+                            <h:outputLink value="#{link.clickableUrl}" target="_blank">#{link.url}</h:outputLink>
+                        </p:column>
+
+                        <p:column headerText="Delete" styleClass="text-center">
+                            <h:form>
+                                <p:commandButton value="Delete" actionListener="#{linkCtrl.delete}" update=":growl, :linkTable">
+                                    <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+                                    <f:attribute name="data-id" value="#{link.id}" />
+                                </p:commandButton>
+
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                                </p:confirmDialog>
+                            </h:form>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </div>
+    </ui:define>
+</ui:composition>

@@ -1,0 +1,13 @@
+<datasources xmlns="http://www.jboss.org/ironjacamar/schema">
+  <datasource jndi-name="java:jboss/datasources/bookmark-pu" pool-name="MySQLPool">
+      <connection-url>jdbc:mysql://127.0.0.1s/bookmark</connection-url>
+      <driver>mysql-connector-java-5.1.32.jar_com.mysql.jdbc.Driver_5_1</driver>
+      <pool>
+          <max-pool-size>30</max-pool-size>
+      </pool>
+      <security>
+          <user-name>root</user-name>
+          <password></password>
+      </security>
+  </datasource>
+</datasources>
